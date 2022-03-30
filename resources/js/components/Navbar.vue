@@ -1,0 +1,18 @@
+<template>
+  <nav>
+    <ul>
+      <li>
+        <router-link :to="{name: 'dashboard'}">Dashboard</router-link>
+      </li>
+      <li>
+        <router-link :to="{name: 'about'}">About</router-link>
+      </li>
+    </ul>
+  </nav>
+</template>
+
+<script>
+export default {
+  name: 'navbar',
+};
+</script>

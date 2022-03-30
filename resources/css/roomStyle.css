@@ -1,0 +1,42 @@
+.room-container {
+    background-color: #B7E4E5;
+    color: #01345B;
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    flex-grow: 3;
+    text-align: center;
+}
+
+.card-container {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1rem 0rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.name-wrapper {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.card-title {
+    font-size: 1.5rem;
+}
+
+.card-limit {
+    color: #48657A;
+    font-size: 1rem;
+}
+
+.green-btn {
+    background-color: #47C39E;
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    padding: 0.5rem 1.5rem;
+}

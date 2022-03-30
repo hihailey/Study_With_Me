@@ -21,8 +21,8 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
 Route::group(['middleware' => 'auth'], function(){
   Route::get('/video_chat', 'App\Http\Controllers\VideoChatController@index');
   Route::post('/auth/video_chat', 'App\Http\Controllers\VideoChatController@auth');
 });
+
