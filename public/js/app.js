@@ -5608,12 +5608,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['user', 'others', 'pusherKey', 'pusherCluster'],
+  props: ['user', 'others', 'pusherKey', 'pusherCluster', 'usersInRoom'],
   data: function data() {
     return {
       channel: null,
       stream: null,
-      peers: {}
+      peers: {},
+      members: []
     };
   },
   mounted: function mounted() {
@@ -5671,11 +5672,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 2:
                 stream = _context.sent;
-                videoHere = _this2.$refs['video-here'];
+                // audio : false
+                videoHere = _this2.$refs['video-here']; // We need to put this in array! -> To make more video
+
                 videoHere.srcObject = stream;
                 _this2.stream = stream;
                 pusher = _this2.getPusherInstance();
                 _this2.channel = pusher.subscribe('presence-video-chat');
+                console.log(_this2.others);
+                console.log(_this2.usersInRoom); //See the all users
 
                 _this2.channel.bind("client-signal-".concat(_this2.user.id), function (signal) {
                   var peer = _this2.getPeer(signal.userId, false);
@@ -5683,7 +5688,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   peer.signal(signal.data);
                 });
 
-              case 9:
+              case 11:
               case "end":
                 return _context.stop();
             }
