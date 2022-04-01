@@ -45473,8 +45473,6 @@ var render = function () {
     _c("h3", [_vm._v(_vm._s(_vm.name))]),
     _vm._v(" "),
     _c("p", [_vm._v("Currently studying: " + _vm._s(_vm.currentSubject))]),
-    _vm._v(" "),
-    _c("div", { staticClass: "align-bottom" }, [_c("log-out-button")], 1),
   ])
 }
 var staticRenderFns = []

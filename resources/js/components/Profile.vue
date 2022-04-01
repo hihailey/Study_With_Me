@@ -3,9 +3,9 @@
     <div class="title">Profile</div>
     <h3>{{name}}</h3>
     <p>Currently studying: {{currentSubject}}</p>
-    <div class="align-bottom">
+    <!-- <div class="align-bottom">
       <log-out-button />
-    </div>
+    </div> -->
   </div>
 </template>
 
