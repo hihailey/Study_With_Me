@@ -28,6 +28,10 @@ Vue.component("video-chat", require("./components/VideoChat.vue").default);
 
 Vue.component("dashboard", require("./components/pages/Dashboard.vue").default);
 
+//  Streaming Components
+Vue.component("broadcaster", require("./components/Broadcaster.vue").default);
+Vue.component("viewer", require("./components/Viewer.vue").default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
