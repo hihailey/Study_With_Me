@@ -73,16 +73,16 @@ export default {
                         trickle: false,
                         stream: stream,
                         config: {
-                            iceServers: [
-                                {
-                                    urls: "stun:stun.stunprotocol.org",
-                                },
-                                {
-                                    urls: this.turn_url,
-                                    username: this.turn_username,
-                                    credential: this.turn_credential,
-                                },
-                            ],
+                            // iceServers: [
+                            //     {
+                            //         urls: "stun:stun.stunprotocol.org",
+                            //     },
+                            //     {
+                            //         urls: this.turn_url,
+                            //         username: this.turn_username,
+                            //         credential: this.turn_credential,
+                            //     },
+                            // ],
                         },
                     });
                 },
@@ -105,7 +105,7 @@ export default {
                         console.log("Broadcaster Peer closed");
                     });
                     peer.on("error", (err) => {
-                        console.log("handle error gracefully");
+                        console.log("handle error gracefully", err);
                     });
                 },
             };

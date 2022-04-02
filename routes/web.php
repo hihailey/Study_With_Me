@@ -19,9 +19,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 
 Route::group(['middleware' => 'auth'], function(){
+    Route::get('/', function () {
+        return view('welcome');
+    });
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
   Route::get('/video_chat', 'App\Http\Controllers\VideoChatController@index');
   Route::post('/auth/video_chat', 'App\Http\Controllers\VideoChatController@auth');
 

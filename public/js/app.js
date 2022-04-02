@@ -5476,8 +5476,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     peerCreator: function peerCreator(stream, user, signalCallback) {
-      var _this2 = this;
-
       var peer;
       return {
         create: function create() {
@@ -5485,14 +5483,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             initiator: true,
             trickle: false,
             stream: stream,
-            config: {
-              iceServers: [{
-                urls: "stun:stun.stunprotocol.org"
-              }, {
-                urls: _this2.turn_url,
-                username: _this2.turn_username,
-                credential: _this2.turn_credential
-              }]
+            config: {// iceServers: [
+              //     {
+              //         urls: "stun:stun.stunprotocol.org",
+              //     },
+              //     {
+              //         urls: this.turn_url,
+              //         username: this.turn_username,
+              //         credential: this.turn_credential,
+              //     },
+              // ],
             }
           });
         },
@@ -5517,62 +5517,62 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             console.log("Broadcaster Peer closed");
           });
           peer.on("error", function (err) {
-            console.log("handle error gracefully");
+            console.log("handle error gracefully", err);
           });
         }
       };
     },
     initializeStreamingChannel: function initializeStreamingChannel() {
-      var _this3 = this;
+      var _this2 = this;
 
       this.streamingPresenceChannel = window.Echo.join("streaming-channel.".concat(this.streamId));
       this.streamingPresenceChannel.here(function (users) {
-        _this3.streamingUsers = users;
+        _this2.streamingUsers = users;
       });
       this.streamingPresenceChannel.joining(function (user) {
         console.log("New User", user); // if this new user is not already on the call, send your stream offer
 
-        var joiningUserIndex = _this3.streamingUsers.findIndex(function (data) {
+        var joiningUserIndex = _this2.streamingUsers.findIndex(function (data) {
           return data.id === user.id;
         });
 
         if (joiningUserIndex < 0) {
-          _this3.streamingUsers.push(user); // A new user just joined the channel so signal that user
+          _this2.streamingUsers.push(user); // A new user just joined the channel so signal that user
 
 
-          _this3.currentlyContactedUser = user.id;
+          _this2.currentlyContactedUser = user.id;
 
-          _this3.$set(_this3.allPeers, "".concat(user.id), _this3.peerCreator(_this3.$refs.broadcaster.srcObject, user, _this3.signalCallback)); // Create Peer
-
-
-          _this3.allPeers[user.id].create(); // Initialize Events
+          _this2.$set(_this2.allPeers, "".concat(user.id), _this2.peerCreator(_this2.$refs.broadcaster.srcObject, user, _this2.signalCallback)); // Create Peer
 
 
-          _this3.allPeers[user.id].initEvents();
+          _this2.allPeers[user.id].create(); // Initialize Events
+
+
+          _this2.allPeers[user.id].initEvents();
         }
       });
       this.streamingPresenceChannel.leaving(function (user) {
         console.log(user.name, "Left"); // destroy peer
 
-        _this3.allPeers[user.id].getPeer().destroy(); // delete peer object
+        _this2.allPeers[user.id].getPeer().destroy(); // delete peer object
 
 
-        delete _this3.allPeers[user.id]; // if one leaving is the broadcaster set streamingUsers to empty array
+        delete _this2.allPeers[user.id]; // if one leaving is the broadcaster set streamingUsers to empty array
 
-        if (user.id === _this3.auth_user_id) {
-          _this3.streamingUsers = [];
+        if (user.id === _this2.auth_user_id) {
+          _this2.streamingUsers = [];
         } else {
           // remove from streamingUsers array
-          var leavingUserIndex = _this3.streamingUsers.findIndex(function (data) {
+          var leavingUserIndex = _this2.streamingUsers.findIndex(function (data) {
             return data.id === user.id;
           });
 
-          _this3.streamingUsers.splice(leavingUserIndex, 1);
+          _this2.streamingUsers.splice(leavingUserIndex, 1);
         }
       });
     },
     initializeSignalAnswerChannel: function initializeSignalAnswerChannel() {
-      var _this4 = this;
+      var _this3 = this;
 
       window.Echo["private"]("stream-signal-channel.".concat(this.auth_user_id)).listen("StreamAnswer", function (_ref) {
         var data = _ref.data;
@@ -5587,7 +5587,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             sdp: "".concat(data.answer.sdp, "\n")
           });
 
-          _this4.allPeers[_this4.currentlyContactedUser].getPeer().signal(updatedSignal);
+          _this3.allPeers[_this3.currentlyContactedUser].getPeer().signal(updatedSignal);
         }
       });
     },
@@ -6007,14 +6007,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var peer = new (simple_peer__WEBPACK_IMPORTED_MODULE_0___default())({
         initiator: false,
         trickle: false,
-        config: {
-          iceServers: [{
-            urls: "stun:stun.stunprotocol.org"
-          }, {
-            urls: this.turn_url,
-            username: this.turn_username,
-            credential: this.turn_credential
-          }]
+        config: {// iceServers: [
+          //     {
+          //         urls: "stun:stun.stunprotocol.org",
+          //     },
+          //     {
+          //         urls: this.turn_url,
+          //         username: this.turn_username,
+          //         credential: this.turn_credential,
+          //     },
+          // ],
         }
       }); // Add Transceivers
 
