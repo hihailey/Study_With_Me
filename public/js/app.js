@@ -5719,21 +5719,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'profile',
+  props: ['username', 'updateSubject'],
   components: {
     logOutButton: _components_Buttons_Logout_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   data: function data() {
     return {
-      user: {
-        name: '',
-        currentSubject: ''
-      }
+      currentSubject: '',
+      subjectList: [{
+        'Id': '',
+        'Name': 'Select subject'
+      }, {
+        'Id': '1',
+        'Name': 'Programming'
+      }, {
+        'Id': '2',
+        'Name': 'Video Editing'
+      }, {
+        'Id': '3',
+        'Name': 'English'
+      }, {
+        'Id': '4',
+        'Name': 'Math'
+      }]
     };
   },
-  methods: {}
+  mounted: function mounted() {
+    this.subjectList.push({
+      'Id': '5',
+      'Name': 'PHP'
+    });
+  },
+  methods: {
+    handleSubject: function handleSubject(e) {
+      this.$emit('subjectSelected', this.currentSubject);
+      console.log(this.currentSubject.Name);
+    }
+  }
 });
 
 /***/ }),
@@ -5762,6 +5790,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'room',
+  props: ['currentSubject'],
   components: {
     roomCard: _RoomCard_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
@@ -5803,7 +5832,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'roomCard',
-  props: ['room']
+  props: ['room', 'currentSubject']
 });
 
 /***/ }),
@@ -6119,6 +6148,21 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Room: _Room_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     Profile: _Profile_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  props: ['username', 'userId'],
+  mounted: function mounted() {
+    console.log(this.username, this.userId);
+  },
+  data: function data() {
+    return {
+      currentSubject: ''
+    };
+  },
+  methods: {
+    updateSubject: function updateSubject(subject) {
+      this.currentSubject = subject;
+      console.log('dash: ', this.currentSubject);
+    }
   }
 });
 
@@ -47699,9 +47743,49 @@ var render = function () {
   return _c("div", { attrs: { id: "profile" } }, [
     _c("div", { staticClass: "title" }, [_vm._v("Profile")]),
     _vm._v(" "),
-    _c("h3", [_vm._v(_vm._s(_vm.name))]),
+    _c("h3", [_vm._v(_vm._s(_vm.username))]),
     _vm._v(" "),
-    _c("p", [_vm._v("Currently studying: " + _vm._s(_vm.currentSubject))]),
+    _c("h4", [_vm._v("Currently studying:")]),
+    _vm._v(" "),
+    _c(
+      "select",
+      {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.currentSubject,
+            expression: "currentSubject",
+          },
+        ],
+        staticClass: "form-select",
+        attrs: { "aria-label": "Default select example" },
+        on: {
+          change: [
+            function ($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function (o) {
+                  return o.selected
+                })
+                .map(function (o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.currentSubject = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            },
+            _vm.handleSubject,
+          ],
+        },
+      },
+      _vm._l(_vm.subjectList, function (subject) {
+        return _c("option", { key: subject.Id, domProps: { value: subject } }, [
+          _vm._v(_vm._s(subject.Name)),
+        ])
+      }),
+      0
+    ),
   ])
 }
 var staticRenderFns = []
@@ -47737,7 +47821,11 @@ var render = function () {
         return _c(
           "div",
           { key: room.name },
-          [_c("roomCard", { attrs: { room: room } })],
+          [
+            _c("roomCard", {
+              attrs: { room: room, currentSubject: _vm.currentSubject },
+            }),
+          ],
           1
         )
       }),
@@ -47777,7 +47865,9 @@ var render = function () {
       ]),
     ]),
     _vm._v(" "),
-    _c("button", { staticClass: "green-btn" }, [_vm._v("Join")]),
+    _c("a", { attrs: { href: "/streaming/" + _vm.room.name } }, [
+      _c("button", { staticClass: "green-btn" }, [_vm._v("Join")]),
+    ]),
   ])
 }
 var staticRenderFns = []
@@ -47903,7 +47993,18 @@ var render = function () {
   return _c(
     "div",
     { staticClass: "dashboard-container" },
-    [_c("profile"), _vm._v(" "), _c("room")],
+    [
+      _c("profile", {
+        attrs: { username: _vm.username },
+        on: {
+          subjectSelected: function ($event) {
+            return _vm.updateSubject($event)
+          },
+        },
+      }),
+      _vm._v(" "),
+      _c("room", { attrs: { currentSubject: _vm.currentSubject } }),
+    ],
     1
   )
 }

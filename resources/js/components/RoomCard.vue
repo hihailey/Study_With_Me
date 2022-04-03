@@ -4,7 +4,7 @@
             <div class="card-title">{{room.name}}</div>
             <div class="card-limit">Limit: {{room.limit}}</div>
         </div>
-        <button class="green-btn">Join</button>
+        <a :href="'/streaming/'+room.name"><button class="green-btn">Join</button></a>
     </div>
 </template>
 
@@ -12,7 +12,7 @@
 
 export default {
   name: 'roomCard',
-  props: ['room']
+  props: ['room', 'currentSubject']
 };
 </script>
 
