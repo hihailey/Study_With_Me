@@ -15,12 +15,13 @@ VideoChat.vue
 import Pusher from 'pusher-js';
 import Peer from 'simple-peer';
 export default {
-  props: ['user', 'others', 'pusherKey', 'pusherCluster'],
+  props: ['user', 'others', 'pusherKey', 'pusherCluster', 'usersInRoom'],
   data() {
     return {
       channel: null,
       stream: null,
-      peers: {}
+      peers: {},
+      members:[]
     }
   },
   mounted() {
@@ -62,16 +63,27 @@ export default {
       // To show pusher errors
       // Pusher.logToConsole = true;
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      // audio : false
+
       const videoHere = this.$refs['video-here'];
+      // We need to put this in array! -> To make more video
+
       videoHere.srcObject = stream;
       this.stream = stream;
       const pusher = this.getPusherInstance();
       this.channel = pusher.subscribe('presence-video-chat');
+
+      console.log(this.others)
+      console.log(this.usersInRoom)
+      //See the all users
+
       this.channel.bind(`client-signal-${this.user.id}`, (signal) => 
       {
         const peer = this.getPeer(signal.userId, false);
         peer.signal(signal.data);
       });
+
+
     },
     getPusherInstance() {
       return new Pusher(this.pusherKey, {

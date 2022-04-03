@@ -6,15 +6,23 @@ use App\Models\User;
 
 class VideoChatController extends Controller
 {
+    public $usersInRoom = [];
     public function index(Request $request) {
         $user = $request->user();
         $others = User::where('id', '!=', $user->id)->pluck('name', 'id');
+
+        Array_push($this->usersInRoom, $user);
+//        dd($this->usersInRoom[0], $user);
         return view('video_chat.index')->with([
-            'user' => collect($request->user()->only(['id', 'name'])),
-            'others' => $others
+            'user' => $user,
+//            'user' => collect($request->user()->only(['id', 'name'])),
+            'others' => $others,
+            'usersInRoom' => implode( ",", $this->usersInRoom),
         ]);
+
+
     }
-    
+
     public function auth(Request $request) {
         $user = $request->user();
         $socket_id = $request->socket_id;
