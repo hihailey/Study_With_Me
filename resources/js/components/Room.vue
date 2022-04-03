@@ -2,7 +2,7 @@
     <div class="room-container">
         <div class="title">Rooms</div>
         <div v-for="room in defaultRooms" v-bind:key="room.name">
-        <roomCard v-bind:room="room"/>
+        <roomCard v-bind:room="room" :currentSubject="currentSubject"/>
         </div>
     </div>
 </template>
@@ -12,6 +12,7 @@ import roomCard from './RoomCard.vue';
 
 export default {
   name: 'room',
+    props:['currentSubject'],
   components: { roomCard },
   data(){
     return {
