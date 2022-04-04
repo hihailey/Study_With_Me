@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Providers\AppServiceProvider;
 
 class MainController extends Controller
 {

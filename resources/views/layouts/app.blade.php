@@ -77,20 +77,22 @@
             </div>
         </nav>
 
-@if (!Auth::guest())
-               @foreach($users as $user)
-              <ul>
-                <li class="user liUser" id="{{ $user->id }}">
-                  <div class="media-body">
-                     <!-- <p class="name">{{ $user->name }}</p> -->
-                     <a class='liA_user' href="/chats/{{ $user->id }}">{{ $user->name }}</a>
-                  </div>
-                </li>
-              </ul>
-         @endforeach
-        @endif
-
+        
         <main class="py-4">
+            @if (!Auth::guest())
+                           @foreach($users as $user)
+                          <ul>
+                            <li class="user liUser" id="{{ $user->id }}">
+                              <div class="media-body">
+                               
+                                 <a class='liA_user' href="/chats/{{ $user->id }}">{{ $user->name }}</a>
+                              </div>
+                            </li>
+                          </ul>
+                     @endforeach
+                    @endif
+            
+                    {{$users}}
             @yield('content')
         </main>
     </div>
