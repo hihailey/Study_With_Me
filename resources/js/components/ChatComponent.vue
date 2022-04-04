@@ -180,6 +180,7 @@ export default {
       Echo.join('send' + groupId)
         .here((user) => {
           this.users = user;
+          console.log('usssss', this.users);
         })
         .joining((user) => {
           this.typing = user.name + ' is online';

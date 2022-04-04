@@ -16,14 +16,23 @@ VideoChat.vue
         ref="video-there"
         autoplay
       ></video>
+
       <div
         class="text-right"
-        v-for="(name,userId) in users"
-        :key="userId"
+        v-for="(user,index) in users"
+        :key="index"
       >
+
+        <!--
+        <videoThere
+          ref="video-here${name}"
+          :peer="peer.peer"
+          :userId="peer.userId"
+        ></videoThere> -->
+
         <button
-          @click="startVideoChat(userId)"
-          v-text="`Talk with ${name}`"
+          @click="startVideoChat(user.id)"
+          v-text="`Talk with ${user.name}`"
         />
       </div>
     </div>
@@ -32,35 +41,43 @@ VideoChat.vue
 <script>
 import Pusher from 'pusher-js';
 import Peer from 'simple-peer';
+import videoThere from './VideoThere.vue';
 export default {
   // props: ['user', 'others', 'pusherKey', 'pusherCluster', 'usersInRoom'],
   props: ['user', 'pusherKey', 'pusherCluster'],
+  components: { videoThere },
   data() {
     return {
       channel: null,
       stream: null,
       peers: {},
       users: [],
-      groupId: '',
     };
   },
   mounted() {
-    this.setupVideoChat();
     this.listen();
+    this.setupVideoChat();
+    this.startVideoChat(this.user.id);
   },
   methods: {
+    test() {
+      alert('parent function called!');
+    },
     listen() {
       var vm = this;
       const url = window.location.href;
       const groupId = url.split('/').slice(-1)[0];
+      vm.groupId = groupId;
       // const groupId = url.split('/').slice(-1)[0];
       Echo.join('send' + groupId)
         .here((user) => {
+          console.log('groudId_chat', groupId);
           this.users = user;
+          console.log(this.users);
         })
         .joining((user) => {
           // this.typing = user.name + ' is online';
-          // this.users.push(user);
+          this.users.push(user);
           // this.typingTimer = setTimeout(() => {
           //   this.typing = '';
           // }, 3000);
@@ -75,6 +92,7 @@ export default {
     },
     startVideoChat(userId) {
       this.getPeer(userId, true);
+      console.log('idididididi', userId);
     },
     getPeer(userId, initiator) {
       if (this.peers[userId] === undefined) {
@@ -85,13 +103,18 @@ export default {
         });
         peer
           .on('signal', (data) => {
-            this.channel.trigger(`client-signal-${userId}`, {
+            console.log('data', data);
+            const url = window.location.href;
+            const groupId = url.split('/').slice(-1)[0];
+            this.channel.trigger('client-' + groupId, {
               userId: this.user.id,
               data: data,
             });
           })
           .on('stream', (stream) => {
             const videoThere = this.$refs['video-there'];
+            console.log('vidoeThere', videoThere);
+            console.log('STREAMMMMMM', stream);
             videoThere.srcObject = stream;
           })
           .on('close', () => {
@@ -102,18 +125,22 @@ export default {
             delete this.peers[userId];
           });
         this.peers[userId] = peer;
+        // this.peers.push({ userId: userId, peer: peer });
+        // console.log('hehehe', Object.entries(this.peers));
       }
       return this.peers[userId];
+      // return this.peers.find((peer) => peer.userId === this.userID);
     },
     async setupVideoChat() {
       // To show pusher errors
       // Pusher.logToConsole = true;
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: true,
+        audio: false,
       });
       // audio : false
-
+      const url = window.location.href;
+      const groupId = url.split('/').slice(-1)[0];
       const videoHere = this.$refs['video-here'];
       // We need to put this in array! -> To make more video
 
@@ -122,11 +149,12 @@ export default {
       const pusher = this.getPusherInstance();
       this.channel = pusher.subscribe('presence-video-chat');
 
-      console.log(this.users);
+      console.log('channel', this.channel);
       // console.log(this.usersInRoom);
       //See the all users
 
-      this.channel.bind(`client-signal-${this.user.id}`, (signal) => {
+      this.channel.bind('client-' + groupId, (signal) => {
+        console.log('SIGNAAAAAL', signal);
         const peer = this.getPeer(signal.userId, false);
         peer.signal(signal.data);
       });
@@ -137,9 +165,8 @@ export default {
         cluster: this.pusherCluster,
         auth: {
           headers: {
-            'X-CSRF-Token': document.head.querySelector(
-              'meta[name="csrf-token"]'
-            ).content,
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')
+              .content,
           },
         },
       });

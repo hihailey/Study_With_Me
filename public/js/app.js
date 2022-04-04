@@ -5853,6 +5853,7 @@ __webpack_require__.r(__webpack_exports__);
       var groupId = url.split('/').slice(-1)[0];
       Echo.join('send' + groupId).here(function (user) {
         _this4.users = user;
+        console.log('usssss', _this4.users);
       }).joining(function (user) {
         _this4.typing = user.name + ' is online';
 
@@ -6071,6 +6072,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pusher_js__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var simple_peer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! simple-peer */ "./node_modules/simple-peer/index.js");
 /* harmony import */ var simple_peer__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(simple_peer__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _VideoThere_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./VideoThere.vue */ "./resources/js/components/VideoThere.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -6108,40 +6110,60 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   // props: ['user', 'others', 'pusherKey', 'pusherCluster', 'usersInRoom'],
   props: ['user', 'pusherKey', 'pusherCluster'],
+  components: {
+    videoThere: _VideoThere_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
   data: function data() {
     return {
       channel: null,
       stream: null,
       peers: {},
-      users: [],
-      groupId: ''
+      users: []
     };
   },
   mounted: function mounted() {
-    this.setupVideoChat();
     this.listen();
+    this.setupVideoChat();
+    this.startVideoChat(this.user.id);
   },
   methods: {
+    test: function test() {
+      alert('parent function called!');
+    },
     listen: function listen() {
       var _this = this;
 
       var vm = this;
       var url = window.location.href;
-      var groupId = url.split('/').slice(-1)[0]; // const groupId = url.split('/').slice(-1)[0];
+      var groupId = url.split('/').slice(-1)[0];
+      vm.groupId = groupId; // const groupId = url.split('/').slice(-1)[0];
 
       Echo.join('send' + groupId).here(function (user) {
+        console.log('groudId_chat', groupId);
         _this.users = user;
+        console.log(_this.users);
       }).joining(function (user) {
         // this.typing = user.name + ' is online';
-        // this.users.push(user);
-        // this.typingTimer = setTimeout(() => {
+        _this.users.push(user); // this.typingTimer = setTimeout(() => {
         //   this.typing = '';
         // }, 3000);
+
+
         console.log('chat online' + user.id);
       }).leaving(function (user) {
         _this.typing = user.name + ' is off line'; // this.typingTimer = setTimeout(() => {
@@ -6151,6 +6173,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     startVideoChat: function startVideoChat(userId) {
       this.getPeer(userId, true);
+      console.log('idididididi', userId);
     },
     getPeer: function getPeer(userId, initiator) {
       var _this2 = this;
@@ -6162,12 +6185,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           trickle: false
         });
         peer.on('signal', function (data) {
-          _this2.channel.trigger("client-signal-".concat(userId), {
+          console.log('data', data);
+          var url = window.location.href;
+          var groupId = url.split('/').slice(-1)[0];
+
+          _this2.channel.trigger('client-' + groupId, {
             userId: _this2.user.id,
             data: data
           });
         }).on('stream', function (stream) {
           var videoThere = _this2.$refs['video-there'];
+          console.log('vidoeThere', videoThere);
+          console.log('STREAMMMMMM', stream);
           videoThere.srcObject = stream;
         }).on('close', function () {
           var peer = _this2.peers[userId];
@@ -6178,16 +6207,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
           delete _this2.peers[userId];
         });
-        this.peers[userId] = peer;
+        this.peers[userId] = peer; // this.peers.push({ userId: userId, peer: peer });
+        // console.log('hehehe', Object.entries(this.peers));
       }
 
-      return this.peers[userId];
+      return this.peers[userId]; // return this.peers.find((peer) => peer.userId === this.userID);
     },
     setupVideoChat: function setupVideoChat() {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var stream, videoHere, pusher;
+        var stream, url, groupId, videoHere, pusher;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -6195,28 +6225,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 2;
                 return navigator.mediaDevices.getUserMedia({
                   video: true,
-                  audio: true
+                  audio: false
                 });
 
               case 2:
                 stream = _context.sent;
                 // audio : false
+                url = window.location.href;
+                groupId = url.split('/').slice(-1)[0];
                 videoHere = _this3.$refs['video-here']; // We need to put this in array! -> To make more video
 
                 videoHere.srcObject = stream;
                 _this3.stream = stream;
                 pusher = _this3.getPusherInstance();
                 _this3.channel = pusher.subscribe('presence-video-chat');
-                console.log(_this3.users); // console.log(this.usersInRoom);
+                console.log('channel', _this3.channel); // console.log(this.usersInRoom);
                 //See the all users
 
-                _this3.channel.bind("client-signal-".concat(_this3.user.id), function (signal) {
+                _this3.channel.bind('client-' + groupId, function (signal) {
+                  console.log('SIGNAAAAAL', signal);
+
                   var peer = _this3.getPeer(signal.userId, false);
 
                   peer.signal(signal.data);
                 });
 
-              case 10:
+              case 12:
               case "end":
                 return _context.stop();
             }
@@ -6230,12 +6264,55 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         cluster: this.pusherCluster,
         auth: {
           headers: {
-            'X-CSRF-Token': document.head.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
           }
         }
       });
     }
   }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoThere.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoThere.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var simple_peer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! simple-peer */ "./node_modules/simple-peer/index.js");
+/* harmony import */ var simple_peer__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(simple_peer__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'videoThere',
+  props: ['userId', 'peer'],
+  data: function data() {
+    return {};
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    // this.$parent.test();
+    this.$parent.startVideoChat(this.userId);
+    this.peer.on('stream', function (stream) {
+      var videoThere = _this.$refs['video-there'];
+      videoThere.srcObject = stream;
+    });
+  },
+  methods: {}
 });
 
 /***/ }),
@@ -47558,6 +47635,45 @@ component.options.__file = "resources/js/components/VideoChat.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/VideoThere.vue":
+/*!************************************************!*\
+  !*** ./resources/js/components/VideoThere.vue ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _VideoThere_vue_vue_type_template_id_afd59258___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VideoThere.vue?vue&type=template&id=afd59258& */ "./resources/js/components/VideoThere.vue?vue&type=template&id=afd59258&");
+/* harmony import */ var _VideoThere_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./VideoThere.vue?vue&type=script&lang=js& */ "./resources/js/components/VideoThere.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _VideoThere_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _VideoThere_vue_vue_type_template_id_afd59258___WEBPACK_IMPORTED_MODULE_0__.render,
+  _VideoThere_vue_vue_type_template_id_afd59258___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/VideoThere.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/Viewer.vue":
 /*!********************************************!*\
   !*** ./resources/js/components/Viewer.vue ***!
@@ -47763,6 +47879,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoChat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./VideoChat.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoChat.vue?vue&type=script&lang=js&");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoChat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/VideoThere.vue?vue&type=script&lang=js&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/VideoThere.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoThere_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./VideoThere.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoThere.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoThere_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -47995,6 +48127,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoChat_vue_vue_type_template_id_737f9f18___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoChat_vue_vue_type_template_id_737f9f18___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./VideoChat.vue?vue&type=template&id=737f9f18& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoChat.vue?vue&type=template&id=737f9f18&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/VideoThere.vue?vue&type=template&id=afd59258&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/VideoThere.vue?vue&type=template&id=afd59258& ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoThere_vue_vue_type_template_id_afd59258___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoThere_vue_vue_type_template_id_afd59258___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VideoThere_vue_vue_type_template_id_afd59258___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./VideoThere.vue?vue&type=template&id=afd59258& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoThere.vue?vue&type=template&id=afd59258&");
 
 
 /***/ }),
@@ -48515,13 +48664,13 @@ var render = function () {
           attrs: { autoplay: "" },
         }),
         _vm._v(" "),
-        _vm._l(_vm.users, function (name, userId) {
-          return _c("div", { key: userId, staticClass: "text-right" }, [
+        _vm._l(_vm.users, function (user, index) {
+          return _c("div", { key: index, staticClass: "text-right" }, [
             _c("button", {
-              domProps: { textContent: _vm._s("Talk with " + name) },
+              domProps: { textContent: _vm._s("Talk with " + user.name) },
               on: {
                 click: function ($event) {
-                  return _vm.startVideoChat(userId)
+                  return _vm.startVideoChat(user.id)
                 },
               },
             }),
@@ -48531,6 +48680,35 @@ var render = function () {
       2
     ),
   ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoThere.vue?vue&type=template&id=afd59258&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/VideoThere.vue?vue&type=template&id=afd59258& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("video", {
+    ref: "video-there",
+    staticClass: "video-there",
+    attrs: { autoplay: "" },
+  })
 }
 var staticRenderFns = []
 render._withStripped = true
