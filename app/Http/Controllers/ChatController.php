@@ -22,10 +22,19 @@ class ChatController extends Controller
     public function index($id)
     {
         $my_id = Auth::id();
+        // room creator gets $g
         $g = Group::where(['id' => $id])->where(['admin_id' => $my_id])->get();
         $go = Group::where(['id' => $id])->first();
+        // room member gets $r
         $r = Group::where(['id' => $id])->get();
         // if has this id in Group table reload page according id
+        // $go->map(function ($r) {
+        print_r(compact('g', 'r'));
+        // });
+        // print_r("wTHIS IS RRRRRR <br>");
+        // $r->map(function ($r) {
+        //     print_r($r . '<br><br>');
+        // });
         if ($go) {
             // if this user has a owner Group after reload page, get all his Group data to delete
             if ($g) {

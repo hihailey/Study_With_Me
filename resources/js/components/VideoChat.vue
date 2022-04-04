@@ -2,11 +2,29 @@ VideoChat.vue
 <template>
   <div class="container">
     <h1 class="text-center">Study With Me!</h1>
-    <div class="video-container" ref="video-container">
-      <video class="video-here" ref="video-here" autoplay></video>  
-      <video class="video-there" ref="video-there" autoplay></video>
-      <div class="text-right" v-for="(name,userId) in others" :key="userId">
-        <button @click="startVideoChat(userId)" v-text="`Talk with ${name}`"/>
+    <div
+      class="video-container"
+      ref="video-container"
+    >
+      <video
+        class="video-here"
+        ref="video-here"
+        autoplay
+      ></video>
+      <video
+        class="video-there"
+        ref="video-there"
+        autoplay
+      ></video>
+      <div
+        class="text-right"
+        v-for="(name,userId) in users"
+        :key="userId"
+      >
+        <button
+          @click="startVideoChat(userId)"
+          v-text="`Talk with ${name}`"
+        />
       </div>
     </div>
   </div>
@@ -15,54 +33,85 @@ VideoChat.vue
 import Pusher from 'pusher-js';
 import Peer from 'simple-peer';
 export default {
-  props: ['user', 'others', 'pusherKey', 'pusherCluster', 'usersInRoom'],
+  // props: ['user', 'others', 'pusherKey', 'pusherCluster', 'usersInRoom'],
+  props: ['user', 'pusherKey', 'pusherCluster'],
   data() {
     return {
       channel: null,
       stream: null,
       peers: {},
-      members:[]
-    }
+      users: [],
+      groupId: '',
+    };
   },
   mounted() {
     this.setupVideoChat();
+    this.listen();
   },
   methods: {
+    listen() {
+      var vm = this;
+      const url = window.location.href;
+      const groupId = url.split('/').slice(-1)[0];
+      // const groupId = url.split('/').slice(-1)[0];
+      Echo.join('send' + groupId)
+        .here((user) => {
+          this.users = user;
+        })
+        .joining((user) => {
+          // this.typing = user.name + ' is online';
+          // this.users.push(user);
+          // this.typingTimer = setTimeout(() => {
+          //   this.typing = '';
+          // }, 3000);
+          console.log('chat online' + user.id);
+        })
+        .leaving((user) => {
+          this.typing = user.name + ' is off line';
+          // this.typingTimer = setTimeout(() => {
+          //   this.typing = '';
+          // }, 3000);
+        });
+    },
     startVideoChat(userId) {
       this.getPeer(userId, true);
     },
     getPeer(userId, initiator) {
-      if(this.peers[userId] === undefined) {
+      if (this.peers[userId] === undefined) {
         let peer = new Peer({
           initiator,
           stream: this.stream,
-          trickle: false
+          trickle: false,
         });
-        peer.on('signal', (data) => {
-          this.channel.trigger(`client-signal-${userId}`, {
-            userId: this.user.id,
-            data: data
+        peer
+          .on('signal', (data) => {
+            this.channel.trigger(`client-signal-${userId}`, {
+              userId: this.user.id,
+              data: data,
+            });
+          })
+          .on('stream', (stream) => {
+            const videoThere = this.$refs['video-there'];
+            videoThere.srcObject = stream;
+          })
+          .on('close', () => {
+            const peer = this.peers[userId];
+            if (peer !== undefined) {
+              peer.destroy();
+            }
+            delete this.peers[userId];
           });
-        })
-        .on('stream', (stream) => {
-          const videoThere = this.$refs['video-there'];
-          videoThere.srcObject = stream;
-        })
-        .on('close', () => {
-          const peer = this.peers[userId];
-          if(peer !== undefined) {
-            peer.destroy();
-          }
-          delete this.peers[userId];
-        });
         this.peers[userId] = peer;
-      } 
+      }
       return this.peers[userId];
     },
     async setupVideoChat() {
       // To show pusher errors
       // Pusher.logToConsole = true;
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
       // audio : false
 
       const videoHere = this.$refs['video-here'];
@@ -73,17 +122,14 @@ export default {
       const pusher = this.getPusherInstance();
       this.channel = pusher.subscribe('presence-video-chat');
 
-      console.log(this.others)
-      console.log(this.usersInRoom)
+      console.log(this.users);
+      // console.log(this.usersInRoom);
       //See the all users
 
-      this.channel.bind(`client-signal-${this.user.id}`, (signal) => 
-      {
+      this.channel.bind(`client-signal-${this.user.id}`, (signal) => {
         const peer = this.getPeer(signal.userId, false);
         peer.signal(signal.data);
       });
-
-
     },
     getPusherInstance() {
       return new Pusher(this.pusherKey, {
@@ -91,12 +137,14 @@ export default {
         cluster: this.pusherCluster,
         auth: {
           headers: {
-            'X-CSRF-Token': document.head.querySelector('meta[name="csrf-token"]').content
-          }
-        }
+            'X-CSRF-Token': document.head.querySelector(
+              'meta[name="csrf-token"]'
+            ).content,
+          },
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

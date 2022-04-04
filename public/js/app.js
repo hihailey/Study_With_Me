@@ -5723,6 +5723,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['user'],
   data: function data() {
@@ -5742,7 +5766,7 @@ __webpack_require__.r(__webpack_exports__);
     var vm = this;
     this.fetchMessages();
     var url = window.location.href;
-    var groupId = url.split("/").slice(-1)[0];
+    var groupId = url.split('/').slice(-1)[0];
     vm.groupId = groupId;
     console.log(groupId);
     Echo.join('chat' + this.user.id).listen('ChatEvent', function (event) {
@@ -5770,7 +5794,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var vm = this;
       var url = window.location.href;
-      var groupId = url.split("/").slice(-1)[0];
+      var groupId = url.split('/').slice(-1)[0];
       axios.get('/messages/' + groupId).then(function (response) {
         _this2.messages = response.data;
       });
@@ -5783,9 +5807,9 @@ __webpack_require__.r(__webpack_exports__);
       });
       var vm = this;
       var url = window.location.href;
-      var groupId = url.split("/").slice(-1)[0];
+      var groupId = url.split('/').slice(-1)[0];
       var current = new Date();
-      var time = current.getHours() + ":" + current.getMinutes();
+      var time = current.getHours() + ':' + current.getMinutes();
       axios.post('/messages/' + groupId, {
         message: this.newMessage,
         fromm: this.user.id,
@@ -5809,14 +5833,14 @@ __webpack_require__.r(__webpack_exports__);
     sendTypingEvent: function sendTypingEvent() {
       var vm = this;
       var url = window.location.href;
-      var groupId = url.split("/").slice(-1)[0];
+      var groupId = url.split('/').slice(-1)[0];
       Echo.join('chat' + this.user.id).whisper('typing', this.user);
       console.log(this.user.name + ' is typing now');
     },
     currentDateTime: function currentDateTime() {
       var current = new Date();
       var date = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
-      var time = current.getHours() + ":" + current.getMinutes();
+      var time = current.getHours() + ':' + current.getMinutes();
       var dateTime = date + ' ' + time;
       console.log(date + time + "Y");
       return time;
@@ -5826,7 +5850,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var vm = this;
       var url = window.location.href;
-      var groupId = url.split("/").slice(-1)[0];
+      var groupId = url.split('/').slice(-1)[0];
       Echo.join('send' + groupId).here(function (user) {
         _this4.users = user;
       }).joining(function (user) {
@@ -6066,27 +6090,70 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['user', 'others', 'pusherKey', 'pusherCluster', 'usersInRoom'],
+  // props: ['user', 'others', 'pusherKey', 'pusherCluster', 'usersInRoom'],
+  props: ['user', 'pusherKey', 'pusherCluster'],
   data: function data() {
     return {
       channel: null,
       stream: null,
       peers: {},
-      members: []
+      users: [],
+      groupId: ''
     };
   },
   mounted: function mounted() {
     this.setupVideoChat();
+    this.listen();
   },
   methods: {
+    listen: function listen() {
+      var _this = this;
+
+      var vm = this;
+      var url = window.location.href;
+      var groupId = url.split('/').slice(-1)[0]; // const groupId = url.split('/').slice(-1)[0];
+
+      Echo.join('send' + groupId).here(function (user) {
+        _this.users = user;
+      }).joining(function (user) {
+        // this.typing = user.name + ' is online';
+        // this.users.push(user);
+        // this.typingTimer = setTimeout(() => {
+        //   this.typing = '';
+        // }, 3000);
+        console.log('chat online' + user.id);
+      }).leaving(function (user) {
+        _this.typing = user.name + ' is off line'; // this.typingTimer = setTimeout(() => {
+        //   this.typing = '';
+        // }, 3000);
+      });
+    },
     startVideoChat: function startVideoChat(userId) {
       this.getPeer(userId, true);
     },
     getPeer: function getPeer(userId, initiator) {
-      var _this = this;
+      var _this2 = this;
 
       if (this.peers[userId] === undefined) {
         var peer = new (simple_peer__WEBPACK_IMPORTED_MODULE_2___default())({
@@ -6095,21 +6162,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           trickle: false
         });
         peer.on('signal', function (data) {
-          _this.channel.trigger("client-signal-".concat(userId), {
-            userId: _this.user.id,
+          _this2.channel.trigger("client-signal-".concat(userId), {
+            userId: _this2.user.id,
             data: data
           });
         }).on('stream', function (stream) {
-          var videoThere = _this.$refs['video-there'];
+          var videoThere = _this2.$refs['video-there'];
           videoThere.srcObject = stream;
         }).on('close', function () {
-          var peer = _this.peers[userId];
+          var peer = _this2.peers[userId];
 
           if (peer !== undefined) {
             peer.destroy();
           }
 
-          delete _this.peers[userId];
+          delete _this2.peers[userId];
         });
         this.peers[userId] = peer;
       }
@@ -6117,7 +6184,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return this.peers[userId];
     },
     setupVideoChat: function setupVideoChat() {
-      var _this2 = this;
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         var stream, videoHere, pusher;
@@ -6134,22 +6201,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 2:
                 stream = _context.sent;
                 // audio : false
-                videoHere = _this2.$refs['video-here']; // We need to put this in array! -> To make more video
+                videoHere = _this3.$refs['video-here']; // We need to put this in array! -> To make more video
 
                 videoHere.srcObject = stream;
-                _this2.stream = stream;
-                pusher = _this2.getPusherInstance();
-                _this2.channel = pusher.subscribe('presence-video-chat');
-                console.log(_this2.others);
-                console.log(_this2.usersInRoom); //See the all users
+                _this3.stream = stream;
+                pusher = _this3.getPusherInstance();
+                _this3.channel = pusher.subscribe('presence-video-chat');
+                console.log(_this3.users); // console.log(this.usersInRoom);
+                //See the all users
 
-                _this2.channel.bind("client-signal-".concat(_this2.user.id), function (signal) {
-                  var peer = _this2.getPeer(signal.userId, false);
+                _this3.channel.bind("client-signal-".concat(_this3.user.id), function (signal) {
+                  var peer = _this3.getPeer(signal.userId, false);
 
                   peer.signal(signal.data);
                 });
 
-              case 11:
+              case 10:
               case "end":
                 return _context.stop();
             }
@@ -48094,14 +48161,13 @@ var render = function () {
                                 _c("br"),
                               ]),
                               _vm._v(
-                                "  \n                             " +
-                                  _vm._s(message.message)
+                                "\n                " + _vm._s(message.message)
                               ),
                               _c("br"),
                               _vm._v(
-                                "\n                             " +
+                                "\n                " +
                                   _vm._s(message.date) +
-                                  " \n                  "
+                                  "\n              "
                               ),
                             ]),
                       ]
@@ -48116,15 +48182,12 @@ var render = function () {
                         _c("strong", { staticStyle: { color: "red" } }, [
                           _vm._v("me"),
                         ]),
-                        _vm._v(
-                          "\n                             " +
-                            _vm._s(message.message)
-                        ),
+                        _vm._v("\n              " + _vm._s(message.message)),
                         _c("br"),
                         _vm._v(
-                          "\n                             " +
+                          "\n              " +
                             _vm._s(message.date) +
-                            "\n                  "
+                            "\n              "
                         ),
                         _c(
                           "button",
@@ -48199,11 +48262,7 @@ var render = function () {
             "ul",
             _vm._l(_vm.users, function (user, index) {
               return _c("li", { key: index, staticClass: "py-2 center" }, [
-                _vm._v(
-                  "\n                  " +
-                    _vm._s(user.name) +
-                    " \n                "
-                ),
+                _vm._v("\n            " + _vm._s(user.name) + "\n          "),
               ])
             }),
             0
@@ -48456,7 +48515,7 @@ var render = function () {
           attrs: { autoplay: "" },
         }),
         _vm._v(" "),
-        _vm._l(_vm.others, function (name, userId) {
+        _vm._l(_vm.users, function (name, userId) {
           return _c("div", { key: userId, staticClass: "text-right" }, [
             _c("button", {
               domProps: { textContent: _vm._s("Talk with " + name) },
