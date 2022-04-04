@@ -34,6 +34,24 @@ Route::group(['middleware' => 'auth'], function(){
     Route::post('/stream-offer', 'App\Http\Controllers\WebrtcStreamingController@makeStreamOffer');
     Route::post('/stream-answer', 'App\Http\Controllers\WebrtcStreamingController@makeStreamAnswer');
 
+    //chat routes
+    Route::get('/chats/{id}/', 'App\Http\Controllers\ChatController@index');
+    Route::get('/messages/{id}/', 'App\Http\Controllers\ChatController@fetchAllMessages');
+    Route::post('/messages/{id}/', 'App\Http\Controllers\ChatController@sendMessage');
+    Route::post('/delete/{code}', 'App\Http\Controllers\ChatController@destroy');
+    Route::DELETE('/delete/{id}/', 'App\Http\Controllers\ChatController@delete');
+
+    Route::get('/main', [App\Http\Controllers\MainController::class, 'index'])->name('main');
+    // Route::get('/main', function () {
+    //     return view('main');
+    // });
+    Route::get('/group/create', 'App\Http\Controllers\GroupController@create_form');
+    Route::post('/group/create', 'App\Http\Controllers\GroupController@create');
+    Route::get('/group/join', 'App\Http\Controllers\GroupController@join_form');
+    Route::post('/group/join', 'App\Http\Controllers\GroupController@join');
+
+    Route::get('/subscribe', 'App\Http\Controllers\ChatController@subscribe');
+
     // Dynamic Presence Channel for Streaming
     Broadcast::channel('streaming-channel.{streamId}', function ($user) {
         return ['id' => $user->id, 'name' => $user->name];

@@ -33,6 +33,8 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
+                        <li><a class="btn btn-light" href="/group/create">Make group</a></li>
+                        <li><a class="btn btn-light" href="/subscribe">Join group</a></li>
 
                     </ul>
 
@@ -74,6 +76,19 @@
                 </div>
             </div>
         </nav>
+
+@if (!Auth::guest())
+               @foreach($users as $user)
+              <ul>
+                <li class="user liUser" id="{{ $user->id }}">
+                  <div class="media-body">
+                     <!-- <p class="name">{{ $user->name }}</p> -->
+                     <a class='liA_user' href="/chats/{{ $user->id }}">{{ $user->name }}</a>
+                  </div>
+                </li>
+              </ul>
+         @endforeach
+        @endif
 
         <main class="py-4">
             @yield('content')
