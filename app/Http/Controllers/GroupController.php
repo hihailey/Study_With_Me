@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Group;
 
-class GroupController extends Controller  
+class GroupController extends Controller
 {
     public function __construct()
     {
@@ -31,20 +31,21 @@ class GroupController extends Controller
             'name' => 'required'
         ]);
 
-        //generate a code for the groupe        
+        //generate a code for the groupe
         $characters = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $code = substr(str_shuffle($characters), rand(0, 9), 7);
-       // insert New Group to Table
+        // insert New Group to Table
         $group = Group::create([
             'name' => $request->name,
             'code' => $code,
             'admin_id' => auth()->user()->id,
         ]);
-        
-        //we attach the user with the group after he created it
-       $group->participants()->attach(auth()->user()->id);
 
-        return redirect('/main')->with('success', 'Your group has been created');
+        //we attach the user with the group after he created it
+        $group->participants()->attach(auth()->user()->id);
+        $id = $group->id;
+
+        return redirect("/chats/{$id}")->with('success', 'Your group has been created');
     }
 
     //display the form to join a group
@@ -59,29 +60,25 @@ class GroupController extends Controller
         $this->validate($request, [
             'code' => 'required'
         ]);
-
         $code = $request->code;
-       $group = Group::where('code', $code)->first();
+        $group = Group::where('code', $code)->first();
+        $id = $request->tableId;
 
         //if the group exists
-        if ($group)
-        {
-            try 
-            {
+        if ($group) {
+            try {
                 //we add the user to the group and we redirect him to the main page with a success message
                 $group->participants()->attach(auth()->user()->id);
-                return redirect('/main')->with('success', 'Group joined');
-            } 
-            catch (\Throwable $th) 
-            {
+                return redirect("/chats/{$id}")->with('success', 'Group joined');
+            } catch (\Throwable $th) {
                 //Display an error if the user is already in the group
-                return redirect()->back()->with('error', 'You are already a member of this group');
+                // return redirect()->back()->with('error', 'You are already a member of this group');
+                return redirect("/chats/{$id}");
             }
-        }
-        else
-        {
+        } else {
             //if the group doesn't exist we throw an error
-            return redirect()->back()->with('error', 'Group not found');
+            // return redirect()->back()->with('error', 'Group not found');
+            return redirect('/');
         }
     }
 }

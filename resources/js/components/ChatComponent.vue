@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-8">
       <div class="card card-default">
-        <div class="card-header center darkgray">Real Time Chat App with Laravel 8 Vue Js and Pusher</div>
+
         <div class="card-body p-0 black">
           <ul
             class="list-unstyled"
@@ -16,29 +16,29 @@
             >
               <div
                 v-if="message.fromm  != user.id"
-                class="container card bg-info mb-4 float-start"
-                style="width: 58%;"
+                class="container card mb-4 float-start"
+                style="width: 58%; background-color:#DB95BB"
               >
                 <div v-if="message.id  !== message.id">
                 </div>
                 <div v-else>
                   <strong>{{ message.fromName }} <br></strong>
                   {{ message.message }}<br>
-                  {{message.date}}
+                  <span class="date">{{message.date}}</span>
                 </div>
               </div>
               <div
                 v-else
-                class="container card bg-warning mb-4"
-                style="color:black;float:write"
+                class="container card mb-4"
+                style="width: 58%; color:black;float:right; background-color:#B7E4E5"
               >
-                <strong style="color:red">me</strong>
+                <strong style="color:black;">{{user.name}}</strong>
                 {{ message.message }}<br>
                 {{message.date}}
                 <button
                   @click="deletePost(message.code)"
-                  class="btn btn-warning"
-                >Remove</button>
+                  class="btn"
+                >-</button>
               </div>
             </li>
           </ul>
@@ -192,6 +192,8 @@ export default {
         })
         .leaving((user) => {
           this.typing = user.name + ' is off line';
+          var newList = this.users.filter((u) => u.name !== user.name);
+          this.users = newList;
           this.typingTimer = setTimeout(() => {
             this.typing = '';
           }, 3000);
@@ -204,3 +206,19 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.btn {
+  background-color: #d07070;
+
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 0 0.75em;
+  color: #fff;
+}
+
+.date {
+  color: #fff;
+}
+</style>

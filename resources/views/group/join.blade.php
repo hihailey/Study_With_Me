@@ -8,22 +8,23 @@
 
                 <div class="card-body">
                     @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            
-                        </div>
+                    <div class="alert alert-success" role="alert">
+
+                    </div>
                     @endif
 
-                
+
                     @foreach($groupALL as $user)
                     <form method="POST" action="/group/join">
                         @csrf
+                        <input type="hidden" value="{{ $user->id }}" name="tableId">
 
                         <div class="form-group row">
                             <label for="code" class="col-md-4 col-form-label text-md-right">{{ $user->name }}</label>
 
                             <div class="col-md-6">
-                              <input id="code" type="hidden" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $user->code }}" required autocomplete="name" autofocus>
-                              </div>
+                                <input id="code" type="hidden" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $user->code }}" required autocomplete="name" autofocus>
+                            </div>
                         </div> <br>
 
                         <div class="form-group row mb-2">

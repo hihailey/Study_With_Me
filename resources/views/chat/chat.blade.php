@@ -12,11 +12,16 @@
     <button type="submit" class="btn btn-danger">Delete</button>
   </form>
   @endforeach
+  <div class="row">
+    <div class="col-8">
+      <video-chat :user="{{ auth()->user() }}" pusher-key="{{ config('broadcasting.connections.pusher.key') }}" pusher-cluster="{{ config('broadcasting.connections.pusher.options.cluster') }}"></video-chat>
+    </div>
+    <div class="col-4">
+      <Timer />
 
+    </div>
+  </div>
   <chat-component :user="{{ auth()->user() }}"></chat-component>
-
-
-  <video-chat :user="{{ auth()->user() }}" pusher-key="{{ config('broadcasting.connections.pusher.key') }}" pusher-cluster="{{ config('broadcasting.connections.pusher.options.cluster') }}"></video-chat>
 
 </div>
 @endsection

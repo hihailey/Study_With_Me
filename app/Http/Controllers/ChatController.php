@@ -110,7 +110,9 @@ class ChatController extends Controller
         $chat = Group::where(['id' => $id])->delete();
         $r = group_participant::where(['group_id' => $id])->delete();
         $chat = chat::where(['group_id' => $id])->delete();
-        return redirect()->route('main')
+        // return redirect()->route('main')
+        //     ->with('success', 'Your Group deleted successfully');
+        return redirect('/')
             ->with('success', 'Your Group deleted successfully');
     }
 }

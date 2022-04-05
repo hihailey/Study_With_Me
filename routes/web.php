@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Group;
+use Illuminate\Http\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,13 +23,18 @@ Auth::routes();
 
 
 
-Route::group(['middleware' => 'auth'], function(){
+Route::group(['middleware' => 'auth'], function () {
     Route::get('/', function () {
         return view('welcome');
     });
+    Route::get('/groups', function () {
+        return response()->json([
+            'groupsAll' => Group::all()
+        ], Response::HTTP_OK);
+    });
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-  Route::get('/video_chat', 'App\Http\Controllers\VideoChatController@index');
-  Route::post('/auth/video_chat', 'App\Http\Controllers\VideoChatController@auth');
+    Route::get('/video_chat', 'App\Http\Controllers\VideoChatController@index');
+    Route::post('/auth/video_chat', 'App\Http\Controllers\VideoChatController@auth');
 
     Route::get('/streaming', 'App\Http\Controllers\WebrtcStreamingController@index');
     Route::get('/streaming/{streamId}', 'App\Http\Controllers\WebrtcStreamingController@consumer');
@@ -57,9 +64,8 @@ Route::group(['middleware' => 'auth'], function(){
         return ['id' => $user->id, 'name' => $user->name];
     });
 
-// Signaling Offer and Answer Channels
+    // Signaling Offer and Answer Channels
     Broadcast::channel('stream-signal-channel.{userId}', function ($user, $userId) {
         return (int) $user->id === (int) $userId;
     });
 });
-

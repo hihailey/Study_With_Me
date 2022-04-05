@@ -25,6 +25,7 @@ Vue.component(
 );
 
 Vue.component("video-chat", require("./components/VideoChat.vue").default);
+Vue.component("timer", require("./components/Timer.vue").default);
 
 Vue.component("dashboard", require("./components/pages/Dashboard.vue").default);
 
@@ -38,7 +39,6 @@ Vue.component(
 );
 import VueChatScroll from "vue-chat-scroll";
 Vue.use(VueChatScroll);
-
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -1,40 +1,50 @@
 VideoChat.vue
 <template>
-  <div class="container">
-    <h1 class="text-center">Study With Me!</h1>
-    <div
-      class="video-container"
-      ref="video-container"
-    >
-      <video
-        class="video-here"
-        ref="video-here"
-        autoplay
-      ></video>
-      <video
-        class="video-there"
-        ref="video-there"
-        autoplay
-      ></video>
+  <div class="">
+    <div class="card card-default">
+      <div class="card-header">Study Buddy</div>
+      <div class="card-body p-0 black">
+        <div class="container">
+          <div
+            class="video-container"
+            ref="video-container"
+          >
+            <video
+              class="video-here"
+              ref="video-here"
+              autoplay
+            ></video>
+            <video
+              class="video-there"
+              ref="video-there"
+              autoplay
+            ></video>
 
-      <div
-        class="text-right"
-        v-for="(user,index) in users"
-        :key="index"
-      >
+          </div>
+          <div class="d-flex wrap justify-content-around">
+            <div
+              class="btn-container"
+              v-for="(user,index) in users"
+              :key="index"
+            >
 
-        <!--
+              <!--
         <videoThere
           ref="video-here${name}"
           :peer="peer.peer"
           :userId="peer.userId"
         ></videoThere> -->
 
-        <button
-          @click="startVideoChat(user.id)"
-          v-text="`Talk with ${user.name}`"
-        />
+              <button
+                class="study-btn"
+                @click="startVideoChat(user.id)"
+                v-text="`Study with ${user.name}`"
+              />
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -176,28 +186,46 @@ export default {
 </script>
 <style>
 .video-container {
-  width: 500px;
-  height: 380px;
+  width: 100%;
+  height: 390px;
   margin: 8px auto;
-  border: 3px solid #000;
-  position: relative;
-  box-shadow: 1px 1px 1px #9e9e9e;
+  border: 1px solid #9e9e9e;
+  /* position: relative; */
+  /* box-shadow: 1px 1px 1px #9e9e9e; */
 }
 .video-here {
   width: 130px;
+  height: 98px;
+  background-color: #fff;
   position: absolute;
-  left: 10px;
-  bottom: 16px;
-  border: 1px solid #000;
+  left: 12px;
+  top: 350px;
+  border: 1px solid #9e9e9e;
   border-radius: 2px;
   z-index: 2;
 }
 .video-there {
   width: 100%;
-  height: 100%;
+  height: 90%;
   z-index: 1;
 }
 .text-right {
   text-align: right;
+  margin-top: 2rem;
+}
+
+.study-btn {
+  background-color: #b7e4e5;
+  border: none;
+  color: #01345b;
+  padding: 10px;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.btn-container {
+  padding-bottom: 0.5rem;
+  margin: 5px;
+  display: inline;
 }
 </style>
