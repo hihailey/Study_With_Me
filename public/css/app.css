@@ -11288,16 +11288,6 @@ textarea.form-control-lg {
 }
 
 
-/* .home-bg{
-  background: url(../study_bg.png) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  height: 100vh;
-
-} */
-
 .login-bg {
   background: url(../study_bg.png) no-repeat center center fixed;
   -webkit-background-size: cover;
@@ -11322,11 +11312,11 @@ textarea.form-control-lg {
   padding: 20px; */
   background: rgb(255, 255, 255, 0.7);
   margin: 30px 0px;
-  
+
 }
 
 .main-textbox {
-  width:30%
+  width: 30%
 }
 
 .main-text-only {
@@ -11338,4 +11328,8 @@ textarea.form-control-lg {
   justify-content: space-around;
   align-content: center;
   align-items: center;
+}
+
+.login-box {
+  margin-top: 30px;
 }
