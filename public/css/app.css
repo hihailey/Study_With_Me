@@ -7486,7 +7486,7 @@ textarea.form-control-lg {
 }
 
 .py-4 {
-  /* padding-top: 1.5rem !important; */
+  padding-top: 1.5rem !important;
   padding-bottom: 1.5rem !important;
 }
 
@@ -11286,6 +11286,7 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+<<<<<<< HEAD
 
 
 .login-bg {
@@ -11333,3 +11334,5 @@ textarea.form-control-lg {
 .login-box {
   margin-top: 30px;
 }
+=======
+>>>>>>> aee91a06b02883e2f6d08cbdbecb7f62ca02da2d

@@ -41,4 +41,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $guarded = [];
+// get Subscribers from group_participant according join to Models\User   
+   public function participants()
+    {
+        return $this->belongsToMany('App\Models\User', 'group_participants', 'group_id', 'user_id');
+    }
+
+    public function group_member()
+    {
+        return $this->belongsToMany('App\Models\Group', 'group_participants')->orderBy('updated_at', 'desc');
+    }
 }

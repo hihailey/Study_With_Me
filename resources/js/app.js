@@ -25,12 +25,20 @@ Vue.component(
 );
 
 Vue.component("video-chat", require("./components/VideoChat.vue").default);
+Vue.component("timer", require("./components/Timer.vue").default);
 
 Vue.component("dashboard", require("./components/pages/Dashboard.vue").default);
 
 //  Streaming Components
 Vue.component("broadcaster", require("./components/Broadcaster.vue").default);
 Vue.component("viewer", require("./components/Viewer.vue").default);
+
+Vue.component(
+    "chat-component",
+    require("./components/ChatComponent.vue").default
+);
+import VueChatScroll from "vue-chat-scroll";
+Vue.use(VueChatScroll);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
