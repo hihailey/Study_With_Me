@@ -34,7 +34,7 @@
               >
                 <strong style="color:black;">{{user.name}}</strong>
                 {{ message.message }}<br>
-                {{message.date}}
+                <span class="date">{{message.date}}</span>
                 <button
                   @click="deletePost(message.code)"
                   class="btn"
@@ -208,6 +208,10 @@ export default {
 </script>
 
 <style scoped>
+.date {
+  color: #ffffff;
+}
+
 .btn {
   background-color: #d07070;
 
@@ -218,7 +222,5 @@ export default {
   color: #fff;
 }
 
-.date {
-  color: #fff;
-}
+
 </style>

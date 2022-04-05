@@ -5,6 +5,7 @@
     padding: 2rem 1.5rem;
     flex-grow: 3;
     text-align: center;
+    overflow-y:scroll;
 }
 
 .card-container {
