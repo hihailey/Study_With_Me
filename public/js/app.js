@@ -13967,7 +13967,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.btn[data-v-80d584ac] {\n  background-color: #d07070;\n\n  position: absolute;\n  right: 0;\n  top: 0;\n  padding: 0 0.75em;\n  color: #fff;\n}\n.date[data-v-80d584ac] {\n  color: #fff;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.date[data-v-80d584ac] {\n  color: #ffffff;\n}\n.btn[data-v-80d584ac] {\n  background-color: #d07070;\n\n  position: absolute;\n  right: 0;\n  top: 0;\n  padding: 0 0.75em;\n  color: #fff;\n}\n\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -14219,7 +14219,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".room-container {\n    background-color: #B7E4E5;\n    color: #01345B;\n    border-radius: 1rem;\n    padding: 2rem 1.5rem;\n    flex-grow: 3;\n    text-align: center;\n}\n\n.card-container {\n    background-color: white;\n    border-radius: 1rem;\n    padding: 1rem;\n    margin: 1rem 0rem;\n    display: flex;\n    flex-direction: row;\n    justify-content: space-between;\n}\n\n.name-wrapper {\n    display: flex;\n    flex-direction: column;\n    text-align: left;\n}\n\n.card-title {\n    font-size: 1.5rem;\n}\n\n.card-limit {\n    color: #48657A;\n    font-size: 1rem;\n}\n\n.green-btn {\n    background-color: #47C39E;\n    color: white;\n    border: none;\n    font-size: 1rem;\n    border-radius: 1rem;\n    padding: 0.5rem 1.5rem;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".room-container {\n    background-color: #B7E4E5;\n    color: #01345B;\n    border-radius: 1rem;\n    padding: 2rem 1.5rem;\n    flex-grow: 3;\n    text-align: center;\n    overflow-y:scroll;\n}\n\n.card-container {\n    background-color: white;\n    border-radius: 1rem;\n    padding: 1rem;\n    margin: 1rem 0rem;\n    display: flex;\n    flex-direction: row;\n    justify-content: space-between;\n}\n\n.name-wrapper {\n    display: flex;\n    flex-direction: column;\n    text-align: left;\n}\n\n.card-title {\n    font-size: 1.5rem;\n}\n\n.card-limit {\n    color: #48657A;\n    font-size: 1rem;\n}\n\n.green-btn {\n    background-color: #47C39E;\n    color: white;\n    border: none;\n    font-size: 1rem;\n    border-radius: 1rem;\n    padding: 0.5rem 1.5rem;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -49003,11 +49003,11 @@ var render = function () {
                         ]),
                         _vm._v("\n              " + _vm._s(message.message)),
                         _c("br"),
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(message.date) +
-                            "\n              "
-                        ),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "date" }, [
+                          _vm._v(_vm._s(message.date)),
+                        ]),
+                        _vm._v(" "),
                         _c(
                           "button",
                           {

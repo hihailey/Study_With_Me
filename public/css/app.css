@@ -7486,7 +7486,7 @@ textarea.form-control-lg {
 }
 
 .py-4 {
-  /* padding-top: 1.5rem !important; */
+  padding-top: 1.5rem !important;
   padding-bottom: 1.5rem !important;
 }
 
@@ -11285,57 +11285,4 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important;
   }
-}
-
-
-/* .home-bg{
-  background: url(../study_bg.png) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  height: 100vh;
-
-} */
-
-.login-bg {
-  background: url(../study_bg.png) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  height: 90vh;
-  width: 100vw;
-  max-width: 100%;
-
-}
-
-.login-container {
-  margin: 20vh;
-}
-
-.main-container {
-  /* display: flex;
-  justify-content: space-around;
-  align-content: center;
-  align-items: center;
-  padding: 20px; */
-  background: rgb(255, 255, 255, 0.7);
-  margin: 30px 0px;
-  
-}
-
-.main-textbox {
-  width:30%
-}
-
-.main-text-only {
-  padding: 50px 100px;
-}
-
-.main-wrapper {
-  display: flex;
-  justify-content: space-around;
-  align-content: center;
-  align-items: center;
 }
