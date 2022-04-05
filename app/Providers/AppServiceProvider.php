@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
   public function register(){}
   public function boot(){
 	Schema::defaultStringLength(191);
-	 view()->composer('*', function ($view){
+	//  view()->composer('*', function ($view){
    view()->composer('*', function($view)
     {
       if (Auth::check()) {
@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
      {
        $view->with('cartItem', 'asdrr' );
       });
-    });
+    // });
   }
 }
 
